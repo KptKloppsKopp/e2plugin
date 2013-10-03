@@ -21,7 +21,7 @@ from Plugins.Plugin import PluginDescriptor
 from threading import Thread
 import os, sys, string, time, datetime
 plugin_path = ''
-VERSION = '0.32'
+VERSION = '0.34'
 
 class fanzone(Screen):
     skin = '<screen position="0,0" size="1280,720" title=" " backgroundColor="#FF000000" >\
@@ -137,160 +137,165 @@ class fanzone(Screen):
 		self.warn.show()
 				        			        	
     def sender(self):
-    	epg = eEPGCache.getInstance()						
-	searchevent = str(epg.lookupEvent(['E' , (self.fzmc[1], 0, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
-	searchtitel = str(epg.lookupEvent(['T' , (self.fzmc[1], 0, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
-	searchevent2 = str(epg.lookupEvent(['E' , (self.fzmc[1], 1, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
-	searchtitel2 = str(epg.lookupEvent(['T' , (self.fzmc[1], 1, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
-	if searchtitel != "'SkyHDFanZone'":					
-		search = searchevent
-	elif searchtitel2 != "'SkyHDFanZone'":
-		search = searchevent2
+    	if self.level == 0:
+    		epg = eEPGCache.getInstance()						
+		searchevent = str(epg.lookupEvent(['E' , (self.fzmc[1], 0, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
+		searchtitel = str(epg.lookupEvent(['T' , (self.fzmc[1], 0, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
+		searchevent2 = str(epg.lookupEvent(['E' , (self.fzmc[1], 1, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
+		searchtitel2 = str(epg.lookupEvent(['T' , (self.fzmc[1], 1, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
+		if searchtitel != "'SkyHDFanZone'":					
+			search = searchevent
+		elif searchtitel2 != "'SkyHDFanZone'":
+			search = searchevent2
+		else:
+			search = "ihhgrktnm68998"
+		if 'ChampionsLeague' in search:
+			fanevent = 'CL:'
+			self.sender = self.sport
+		else:
+			fanevent = "BL:"
+			self.sender = self.buli
+		self.fzkf = self.sender[0]
+		for aktive in self.sender:						
+            		partie = "jb+#äü(/&%"
+            		geg1 = "v-+?%&"							
+	    		geg2 ="htfdgkhj=$6(68/$"
+	    		title = str(epg.lookupEvent(['T' , (aktive[1], 0, -1)])).strip().replace(" ","")
+	    		title2 = str(epg.lookupEvent(['T' , (aktive[1], 1, -1)])).strip().replace(" ","")
+	    		subtitle = str(epg.lookupEvent(['S' , (aktive[1], 0, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
+	    		subtitle2 = str(epg.lookupEvent(['S' , (aktive[1], 1, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
+	    		if (subtitle == "'MomentankeinProgramm'") or ("Live" not in title):
+				title = title2
+				subtitle = subtitle2
+	    		if (str(fanevent).strip('[]') in title) and (',' in title) and ('-' in title): 
+	    			title = title.split(str(fanevent).strip('[]'))							
+				title = str(title[1])
+				title = title.split(',')							
+				title = str(title[0])
+				partie = title.strip('[]').replace(" ","")
+				title = title.split('-')
+				geg1 = str(title[0]).strip('[]').replace(" ","")
+				geg2 = str(title[1]).strip('[]').replace(" ","")
+	    		if geg1 == "FCBayernMünchen":
+	    			geg1 ="BayernMünchen"
+	    		if geg1 == "BorussiaM'Gladbach":
+	    			geg1 = "BorussiaMönchengladbach"
+	    		if geg1 == "FCSchalke04":
+	    			geg1 = "Schalke04"
+	    		if geg1 == "FCIngolstadt04":
+	    			geg1 = "FCIngolstadt"
+	    		if geg1 == "SCPaderborn07":
+	    			geg1 = "FCPaderborn"
+	    		if geg2 == "FCBayernMünchen":
+	    			geg2 ="BayernMünchen"
+	    		if geg2 == "BorussiaM'Gladbach":
+	    			geg2 = "BorussiaMönchengladbach"
+	    		if geg2 == "FCSchalke04":
+	    			geg2 = "Schalke04"
+	    		if geg2 == "FCIngolstadt04":
+	    			geg2 = "FCIngolstadt"
+	    		if geg2 == "SCPaderborn07":
+	    			geg2 = "FCPaderborn"
+	    		if (partie in search) or (geg1 in search) or (geg2 in search):  
+				self.events.append(aktive[1])
+	    		if ('Konferenz' in title):
+	    			self.konferenz.append(aktive[1])
 	else:
-		search = "ihhgrktnm68998"
-	if 'ChampionsLeague' in search:
-		fanevent = 'CL:'
-		self.sender = self.sport
-	else:
-		fanevent = "BL:"
-		self.sender = self.buli
-	self.fzkf = self.sender[0]
-	for aktive in self.sender:						
-            partie = "jb+#äü(/&%"
-            geg1 = "v-+?%&"							
-	    geg2 ="htfdgkhj=$6(68/$"
-	    title = str(epg.lookupEvent(['T' , (aktive[1], 0, -1)])).strip().replace(" ","")
-	    title2 = str(epg.lookupEvent(['T' , (aktive[1], 1, -1)])).strip().replace(" ","")
-	    subtitle = str(epg.lookupEvent(['S' , (aktive[1], 0, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
-	    subtitle2 = str(epg.lookupEvent(['S' , (aktive[1], 1, -1)])).strip().strip('[]').strip('()').strip(',').replace(" ","")
-	    if (subtitle == "'MomentankeinProgramm'") or ("Live" not in title):
-		title = title2
-		subtitle = subtitle2
-	    if (str(fanevent).strip('[]') in title) and (',' in title) and ('-' in title): 
-	    	title = title.split(str(fanevent).strip('[]'))							
-		title = str(title[1])
-		title = title.split(',')							
-		title = str(title[0])
-		partie = title.strip('[]').replace(" ","")
-		title = title.split('-')
-		geg1 = str(title[0]).strip('[]').replace(" ","")
-		geg2 = str(title[1]).strip('[]').replace(" ","")
-	    if geg1 == "FCBayernMünchen":
-	    	geg1 ="BayernMünchen"
-	    if geg1 == "BorussiaM'Gladbach":
-	    	geg1 = "BorussiaMönchengladbach"
-	    if geg1 == "FCSchalke04":
-	    	geg1 = "Schalke04"
-	    if geg1 == "FCIngolstadt04":
-	    	geg1 = "FCIngolstadt"
-	    if geg1 == "SCPaderborn07":
-	    	geg1 = "FCPaderborn"
-	    if geg2 == "FCBayernMünchen":
-	    	geg2 ="BayernMünchen"
-	    if geg2 == "BorussiaM'Gladbach":
-	    	geg2 = "BorussiaMönchengladbach"
-	    if geg2 == "FCSchalke04":
-	    	geg2 = "Schalke04"
-	    if geg2 == "FCIngolstadt04":
-	    	geg2 = "FCIngolstadt"
-	    if geg2 == "SCPaderborn07":
-	    	geg2 = "FCPaderborn"
-	    if (partie in search) or (geg1 in search) or (geg2 in search):  
-		self.events.append(aktive[1])
-	    if ('Konferenz' in title):
-	    	self.konferenz.append(aktive[1])
-				   
+		return   
     def positionen(self):
-    	pos = []
-        posfile = open('/usr/lib/enigma2/python/Plugins/SystemPlugins/SkyFanZone/pos.cfg', 'r')
-        for line in posfile:
-            row = line.rstrip().split(',')
-            pos.append(row)
-        posfile.close()
-        self.track = self.session.nav.getCurrentService().audioTracks().getNumberOfTracks()	
-	if self.track == 8:				
-		posu = pos[7]
-	elif self.track == 7:
-		posu = pos[6]
-	elif self.track == 6:
-	    	posu = pos[5]
-	elif self.track == 5:
-	    	posu = pos[4]
-	elif self.track == 4:
-	    	posu = pos[3]
-	elif self.track == 3:
-	    	posu = pos[2]
-	elif self.track == 2:
-	    	posu = pos[1]
-	else:
-		posu = pos[0]
-	self.pos = []
-        self.pos.append(int(posu[1].strip()))
-        self.pos.append(int(posu[2].strip()))
-        if self.track == 2:
-            	self.pos.append(int(posu[2].strip()))
-        if self.track > 2:
-            	self.pos.append(int(posu[3].strip()))
-        if self.track == 3:
-            	self.pos.append(int(posu[3].strip()))
-        if self.track > 3:
-            	self.pos.append(int(posu[4].strip()))
-        if self.track == 4:
-            	self.pos.append(int(posu[4].strip()))
-        if self.track > 4:
-            	self.pos.append(int(posu[5].strip()))
-        if self.track == 5:
-            	self.pos.append(int(posu[5].strip()))
-        if self.track > 5:
-           	self.pos.append(int(posu[6].strip()))
-        if self.track == 6:
-            	self.pos.append(int(posu[6].strip()))
-        if self.track > 6:
-            	self.pos.append(int(posu[7].strip()))
-        if self.track == 7:
-            	self.pos.append(int(posu[7].strip()))
-        if self.track > 7:
-        	self.pos.append(int(posu[8].strip()))
-        if self.track == 8:
-            	self.pos.append(int(posu[8].strip()))
-        if self.track > 8:
-            	self.pos.append(int(posu[9].strip()))
-            	self.pos.append(int(posu[10].strip()))
-            	self.pos.append(int(posu[11].strip()))
-        self.pos.append(int(posu[1+self.track].strip()))
-        self.pos.append(int(posu[2+self.track].strip()))
-        if self.track == 2:
-            	self.pos.append(int(posu[2+self.track].strip()))
-        if self.track > 2:
-            	self.pos.append(int(posu[3+self.track].strip()))
-        if self.track == 3:
-            	self.pos.append(int(posu[3+self.track].strip()))
-        if self.track > 3:
-            	self.pos.append(int(posu[4+self.track].strip()))
-        if self.track == 4:
-            	self.pos.append(int(posu[4+self.track].strip()))
-        if self.track > 4:
-            	self.pos.append(int(posu[5+self.track].strip()))
-        if self.track == 5:
-            	self.pos.append(int(posu[5+self.track].strip()))
-        if self.track > 5:
-            	self.pos.append(int(posu[6+self.track].strip()))
-        if self.track == 6:
-            	self.pos.append(int(posu[6+self.track].strip()))
-        if self.track > 6:
-            	self.pos.append(int(posu[7+self.track].strip()))
-        if self.track == 7:
-        	self.pos.append(int(posu[7+self.track].strip()))
-        if self.track > 7:
-            	self.pos.append(int(posu[8+self.track].strip()))
-        if self.track == 8:
-            	self.pos.append(int(posu[8+self.track].strip()))
-        if self.track > 8:
-            	self.pos.append(int(posu[9+self.track].strip()))
-            	self.pos.append(int(posu[10+self.track].strip()))
-            	self.pos.append(int(posu[11+self.track].strip()))
-        if len(self.events) > 0:
-        	self.ksp = 0
+    	if self.level == 0:
+    		pos = []
+        	posfile = open('/usr/lib/enigma2/python/Plugins/SystemPlugins/SkyFanZone/pos.cfg', 'r')
+        	for line in posfile:
+            		row = line.rstrip().split(',')
+            		pos.append(row)
+        	posfile.close()
+        	self.track = self.session.nav.getCurrentService().audioTracks().getNumberOfTracks()	
+		if self.track == 8:				
+			posu = pos[7]
+		elif self.track == 7:
+			posu = pos[6]
+		elif self.track == 6:
+	    		posu = pos[5]
+		elif self.track == 5:
+	    		posu = pos[4]
+		elif self.track == 4:
+	    		posu = pos[3]
+		elif self.track == 3:
+	    		posu = pos[2]
+		elif self.track == 2:
+	    		posu = pos[1]
+		else:
+			posu = pos[0]
+		self.pos = []
+        	self.pos.append(int(posu[1].strip()))
+        	self.pos.append(int(posu[2].strip()))
+        	if self.track == 2:
+            		self.pos.append(int(posu[2].strip()))
+        	if self.track > 2:
+            		self.pos.append(int(posu[3].strip()))
+        	if self.track == 3:
+            		self.pos.append(int(posu[3].strip()))
+        	if self.track > 3:
+            		self.pos.append(int(posu[4].strip()))
+        	if self.track == 4:
+            		self.pos.append(int(posu[4].strip()))
+        	if self.track > 4:
+            		self.pos.append(int(posu[5].strip()))
+        	if self.track == 5:
+            		self.pos.append(int(posu[5].strip()))
+        	if self.track > 5:
+	           	self.pos.append(int(posu[6].strip()))
+        	if self.track == 6:
+            		self.pos.append(int(posu[6].strip()))
+        	if self.track > 6:
+	            	self.pos.append(int(posu[7].strip()))
+        	if self.track == 7:
+            		self.pos.append(int(posu[7].strip()))
+        	if self.track > 7:
+        		self.pos.append(int(posu[8].strip()))
+        	if self.track == 8:
+            		self.pos.append(int(posu[8].strip()))
+        	if self.track > 8:
+            		self.pos.append(int(posu[9].strip()))
+            		self.pos.append(int(posu[10].strip()))
+            		self.pos.append(int(posu[11].strip()))
+        	self.pos.append(int(posu[1+self.track].strip()))
+        	self.pos.append(int(posu[2+self.track].strip()))
+        	if self.track == 2:
+            		self.pos.append(int(posu[2+self.track].strip()))
+        	if self.track > 2:
+            		self.pos.append(int(posu[3+self.track].strip()))
+        	if self.track == 3:
+	       		self.pos.append(int(posu[3+self.track].strip()))
+        	if self.track > 3:
+            		self.pos.append(int(posu[4+self.track].strip()))
+        	if self.track == 4:
+            		self.pos.append(int(posu[4+self.track].strip()))
+        	if self.track > 4:
+            		self.pos.append(int(posu[5+self.track].strip()))
+        	if self.track == 5:
+            		self.pos.append(int(posu[5+self.track].strip()))
+        	if self.track > 5:
+            		self.pos.append(int(posu[6+self.track].strip()))
+        	if self.track == 6:
+            		self.pos.append(int(posu[6+self.track].strip()))
+        	if self.track > 6:
+            		self.pos.append(int(posu[7+self.track].strip()))
+        	if self.track == 7:
+        		self.pos.append(int(posu[7+self.track].strip()))
+        	if self.track > 7:
+            		self.pos.append(int(posu[8+self.track].strip()))
+        	if self.track == 8:
+            		self.pos.append(int(posu[8+self.track].strip()))
+        	if self.track > 8:
+            		self.pos.append(int(posu[9+self.track].strip()))
+            		self.pos.append(int(posu[10+self.track].strip()))
+            		self.pos.append(int(posu[11+self.track].strip()))
+        	if len(self.events) > 0:
+        		self.ksp = 0
+        else:
+        	return
     	
     def cancel(self):
         self.hide()
@@ -314,12 +319,12 @@ class fanzone(Screen):
         self.exit.hide()						
         self.warn.hide()
         self.audsel.hide()
-        self.pxmap.hide()
-
+        
     def ok(self):							
         if self.level == 0:						
             self.level = 1						
-            self.hide()						
+            self.hide()
+            self.pxmap.hide()						
             if (len(self.events) < self.step) or (self.ksp == 1):				
                 self.warn.setText(_('Spiel nicht gefunden\nSchalte auf Konferenz'))
         	self.warnTimer.start(3000)
