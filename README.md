@@ -1,2 +1,1 @@
-e2plugin
-========
+e2plugin für alle boxen
