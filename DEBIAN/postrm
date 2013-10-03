@@ -1,0 +1,7 @@
+#!/bin/sh
+rm -rf /usr/lib/enigma2/python/Plugins/SystemPlugins/SkyFanZone/* > /dev/null 2>&1
+rm -rf /usr/lib/enigma2/python/Plugins/SystemPlugins/SkyFanZone/png/* > /dev/null 2>&1
+rmdir /usr/lib/enigma2/python/Plugins/SystemPlugins/SkyFanZone/png/ > /dev/null 2>&1
+rmdir /usr/libenigma2/python/Plugins/SystemPlugins/SkyFanZone/ > /dev/null 2>&1
+exit 0
+
